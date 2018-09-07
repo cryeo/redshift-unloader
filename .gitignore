@@ -1,0 +1,11 @@
+.python-version
+.idea/**
+.eggs/
+*.egg-info/
+*.egg
+.tox/
+.pytest_cache/
+__pycache__/
+build/
+dist/
+*~
