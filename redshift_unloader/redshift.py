@@ -22,6 +22,7 @@ class Redshift:
             user=user,
             password=password,
             database=database)
+        self.__connection.autocommit = True
         self.__cursor = self.__connection.cursor()
 
     def __del__(self) -> None:
@@ -86,8 +87,6 @@ class Redshift:
 
         try:
             self.__cursor.execute(sql)
-            self.__connection.commit()
-
             return True
         except Exception as e:
             raise e
