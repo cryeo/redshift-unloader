@@ -33,7 +33,11 @@ class RedshiftUnloader:
             credential=credential)
         self.__s3 = S3(credential=credential, bucket=s3_bucket, region=region)
         if verbose:
+            logger.disabled = False
             logger.setLevel(logging.DEBUG)
+        else:
+            logger.disabled = True
+
 
     def unload(self, query: str, filename: str, with_header: bool = True) -> None:
         session_id = self.__generate_session_id()
