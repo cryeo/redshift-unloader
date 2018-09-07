@@ -4,7 +4,6 @@ from unittest import mock
 from mock import PropertyMock
 from collections import namedtuple
 
-from redshift_unloader.logger import logger
 from redshift_unloader.credential import Credential
 from redshift_unloader.redshift import Redshift
 
@@ -25,10 +24,9 @@ class TestRedshift(unittest.TestCase):
         self.credential = Credential(access_key_id=self.ACCESS_KEY_ID, secret_access_key=self.SECRET_ACCESS_KEY)
         self.redshift = Redshift(host=self.HOST, port=self.PORT, user=self.USER, password=self.PASSWORD,
                                  database=self.DATABASE, credential=self.credential)
-        logger.disabled = True
 
     def tearDown(self):
-        logger.disabled = False
+        pass
 
     def test_get_columns(self):
         query = "SELECT * FROM some_table WHERE date_column >= '2018-01-01'"

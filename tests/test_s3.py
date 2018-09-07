@@ -5,7 +5,6 @@ import os
 
 from moto import mock_s3
 
-from redshift_unloader.logger import logger
 from redshift_unloader.s3 import S3
 from redshift_unloader.credential import Credential
 
@@ -35,12 +34,8 @@ class TestS3(unittest.TestCase):
         self.credential = Credential(access_key_id=self.ACCESS_KEY_ID, secret_access_key=self.SECRET_ACCESS_KEY)
         self.s3 = S3(self.credential, bucket=self.BUCKET, region=self.REGION)
 
-        logger.disabled = True
-
     def tearDown(self):
         self.mock_s3.stop()
-
-        logger.disabled = False
 
     def test_uri(self):
         self.assertEqual(self.s3.uri('/path/to'), f's3://{self.BUCKET}/path/to')

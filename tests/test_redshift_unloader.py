@@ -4,7 +4,6 @@ from unittest import mock
 from mock import call
 
 from redshift_unloader import RedshiftUnloader
-from redshift_unloader.logger import logger
 
 
 class TestRedshiftUnloader(unittest.TestCase):
@@ -28,10 +27,9 @@ class TestRedshiftUnloader(unittest.TestCase):
                                          database=self.DATABASE, s3_bucket=self.S3_BUCKET,
                                          access_key_id=self.ACCESS_KEY_ID, secret_access_key=self.SECRET_ACCESS_KEY,
                                          region=self.REGION)
-        logger.disabled = True
 
     def tearDown(self):
-        logger.disabled = False
+        pass
 
     @mock.patch('builtins.open')
     @mock.patch('shutil.copyfileobj')
@@ -73,6 +71,7 @@ class TestRedshiftUnloader(unittest.TestCase):
                                                                                      delimiter=',',
                                                                                      null_string='',
                                                                                      add_quotes=True,
+                                                                                     escape=True,
                                                                                      allow_overwrite=True)
 
             self.unloader._RedshiftUnloader__s3.list.assert_called_once_with(s3_path)

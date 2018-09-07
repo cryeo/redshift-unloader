@@ -3,7 +3,7 @@ import shutil
 import tempfile
 import uuid
 import gzip
-import io
+import logging
 
 from redshift_unloader.credential import Credential
 from redshift_unloader.redshift import Redshift
@@ -21,7 +21,7 @@ class RedshiftUnloader:
 
     def __init__(self, host: str, port: int, user: str, password: str,
                  database: str, s3_bucket: str, access_key_id: str,
-                 secret_access_key: str, region: str) -> None:
+                 secret_access_key: str, region: str, verbose: bool = False) -> None:
         credential = Credential(
             access_key_id=access_key_id, secret_access_key=secret_access_key)
         self.__redshift = Redshift(
@@ -32,6 +32,8 @@ class RedshiftUnloader:
             database=database,
             credential=credential)
         self.__s3 = S3(credential=credential, bucket=s3_bucket, region=region)
+        if verbose:
+            logger.setLevel(logging.DEBUG)
 
     def unload(self, query: str, filename: str, with_header: bool = True) -> None:
         session_id = self.__generate_session_id()
@@ -52,6 +54,7 @@ class RedshiftUnloader:
             delimiter=',',
             null_string='',
             add_quotes=True,
+            escape=True,
             allow_overwrite=True)
 
         logger.debug("Fetch the list of objects")

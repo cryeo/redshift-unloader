@@ -28,7 +28,8 @@ ru = RedshiftUnloader(host='<redshift host>',
                       s3_bucket='<s3 bucket name>',
                       access_key_id='<aws access key id>',
                       secret_access_key='<aws secret access key>',
-                      region='<aws region>')
+                      region='<aws region>',
+                      verbose=False)
 
 # If you don't need header, set with_header as False
 ru.unload(query="SELECT * FROM my_table WHERE log_time >= ''", 
