@@ -39,7 +39,7 @@ class TestRedshift(unittest.TestCase):
         type(self.mock_cursor).description = description
 
         actual = self.redshift.get_columns(query)
-        expected = ['column1', 'column2']
+        expected = ['"column1"', '"column2"']
 
         self.assertListEqual(actual, expected)
         self.mock_cursor.execute.assert_called_once()

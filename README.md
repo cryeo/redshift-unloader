@@ -15,7 +15,7 @@ pip install redshift-unloader
 ```
 
 ### Usage
-Unloaded data is supposed to be gzipped csv.
+Unloaded data is supposed to be gzipped.
 
 ```py
 from redshift_unloader import RedshiftUnloader
@@ -31,8 +31,11 @@ ru = RedshiftUnloader(host='<redshift host>',
                       region='<aws region>',
                       verbose=False)
 
-# If you don't need header, set with_header as False
-ru.unload(query="SELECT * FROM my_table WHERE log_time >= ''", 
-          filename="/path/to/result.csv.gz",
+ru.unload("SELECT * FROM my_table WHERE log_time >= 'yyyyMMdd'",
+          "/path/to/result.csv.gz",
+          delimiter=',',
+          add_quotes=True,
+          escape=True,
+          null_string='',
           with_header=True)
 ```

@@ -32,13 +32,14 @@ class Redshift:
         except:
             pass
 
-    def get_columns(self, query: str) -> List[str]:
+    def get_columns(self, query: str, add_quotes: bool = True) -> List[str]:
+        quote = '"' if add_quotes else ''
         sql = self.__generate_get_columns_sql(query)
         logger.debug("query: %s", sql)
 
         try:
             self.__cursor.execute(sql)
-            result = [column.name for column in self.__cursor.description]
+            result = [f'{quote}{column.name}{quote}' for column in self.__cursor.description]
 
             return result
         except Exception as e:

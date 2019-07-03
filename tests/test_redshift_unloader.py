@@ -57,16 +57,17 @@ class TestRedshiftUnloader(unittest.TestCase):
         with mock.patch.object(self.unloader,
                                '_RedshiftUnloader__generate_session_id',
                                return_value=session_id):
-            self.redshift.get_columns.return_value = ['column1', 'column2']
+            self.redshift.get_columns.return_value = ['"column1"', '"column2"']
             self.s3.list.return_value = s3_keys
             self.s3.uri.side_effect = lambda x: f's3://bucket{x}'
 
             self.unloader.unload(query, filename)
 
-            self.unloader._RedshiftUnloader__redshift.get_columns.assert_called_once_with(query)
+            self.unloader._RedshiftUnloader__redshift.get_columns.assert_called_once_with(query, True)
 
             self.unloader._RedshiftUnloader__s3.uri.assert_called_once_with(f"/{s3_path}")
-            self.unloader._RedshiftUnloader__redshift.unload.assert_called_once_with(query, s3_uri, gzip=True,
+            self.unloader._RedshiftUnloader__redshift.unload.assert_called_once_with(query, s3_uri,
+                                                                                     gzip=True,
                                                                                      parallel=True,
                                                                                      delimiter=',',
                                                                                      null_string='',

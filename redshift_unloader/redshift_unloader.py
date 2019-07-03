@@ -39,7 +39,9 @@ class RedshiftUnloader:
             logger.disabled = True
 
 
-    def unload(self, query: str, filename: str, with_header: bool = True) -> None:
+    def unload(self, query: str, filename: str,
+               delimiter: str = ',', add_quotes: bool = True, escape: bool = True,
+               null_string: str = '', with_header: bool = True) -> None:
         session_id = self.__generate_session_id()
         logger.debug("Session id: %s", session_id)
 
@@ -47,7 +49,7 @@ class RedshiftUnloader:
         local_path = self.__generate_path(tempfile.gettempdir(), session_id)
 
         logger.debug("Get columns")
-        columns = self.__redshift.get_columns(query) if with_header else None
+        columns = self.__redshift.get_columns(query, add_quotes) if with_header else None
 
         logger.debug("Unload")
         self.__redshift.unload(
@@ -55,10 +57,10 @@ class RedshiftUnloader:
             self.__s3.uri(s3_path),
             gzip=True,
             parallel=True,
-            delimiter=',',
-            null_string='',
-            add_quotes=True,
-            escape=True,
+            delimiter=delimiter,
+            null_string=null_string,
+            add_quotes=add_quotes,
+            escape=escape,
             allow_overwrite=True)
 
         logger.debug("Fetch the list of objects")
@@ -75,7 +77,7 @@ class RedshiftUnloader:
         logger.debug("Merge all objects")
         with open(filename, 'wb') as out:
             if columns is not None:
-                out.write(gzip.compress((','.join(columns) + os.linesep).encode()))
+                out.write(gzip.compress((delimiter.join(columns) + os.linesep).encode()))
 
             for local_file in local_files:
                 logger.debug("Merge %s into result file", local_file)
