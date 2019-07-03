@@ -13,6 +13,7 @@ setup(
     version=redshift_unloader.__version__,
     description='Unload utility for Amazon Redshift',
     long_description=readme,
+    long_description_content_type='text/markdown',
     author='Chaerim Yeo',
     author_email='yeochaerim@gmail.com',
     url='https://github.com/cryeo/redshift-unloader',
